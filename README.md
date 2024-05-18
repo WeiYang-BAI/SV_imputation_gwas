@@ -1,1 +1,1 @@
-# SV_IMPUTE_GWAS
+# SV imputation and GWAS
