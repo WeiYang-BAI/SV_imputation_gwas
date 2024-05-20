@@ -6,7 +6,7 @@ sn=${SLURM_ARRAY_TASK_ID}
 
 if [ $sn -gt 2088 ]; then cob=C; else cob=B; fi
 
-T2740_filePath_F=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_final/PHENOTYPE/infos/both.final.2740.filePath
+T2740_filePath_F=PHENOTYPE/infos/both.final.2740.filePath
 
 phe=$(cat ${T2740_filePath_F} | sed -n "${sn}p" | awk -F'/' '{print $8}' | awk -F'.pheno' '{print $1}')
 
