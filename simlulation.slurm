@@ -27,7 +27,7 @@ gcta64=${tmpDir}/cv_pool/gcta64_2021Jun02
 
 for sd in 0 ;do
 for ARR in STA ; do
-for region in fe_en diff_en whole ;do
+for region in fe_en1 diff_en1 fe_en2 diff_en2 fe_en3 diff_en3 whole diff fe;do
 for c in 2 10 20 ; do
 
 geno_mac2_F=Chrs_22/OKG.EUR.chr${c}.mac2.507
@@ -48,7 +48,7 @@ spl=l${ln}m${mn}
 coN=$((ln*mn*2))
 
 
-mgrm=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_s5_2t/17.SIMULATION/FOR_heritability/Imputed_EUR/STA/zFor_LDMS/z${ldp}_${spl}_rmM${sd}sd/chr${c}.grm.files
+mgrm=z${ldp}_${spl}_rmM${sd}sd/chr${c}.grm.files
 
 # cv_N is mean cv_N of SVs
 for q2 in 0.2 0.3 0.4; do 
@@ -235,7 +235,7 @@ done
 
 
 
-for spe in main_mg;do  # total scenarios: 2430 * 2
+for spe in main_mg;do 
 
 aimD=zzSim_spe_${spe}
 mkdir -p ${aimD}
@@ -283,8 +283,8 @@ spl=l${ln}m${mn}
 coN=1 # now for marginal, no use mgrm but single grm file
 
 
-SGV_grm=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_s5_2t/17.SIMULATION/FOR_heritability/Imputed_EUR/STA/zFor_LDMS/z${ldp}_${spl}_rmM${sd}sd/chr${c}.SGV.id.lds_1_maf_1
-SV_grm=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_s5_2t/17.SIMULATION/FOR_heritability/Imputed_EUR/STA/zFor_LDMS/z${ldp}_${spl}_rmM${sd}sd/chr${c}.SV.id.lds_1_maf_1
+SGV_grm=z${ldp}_${spl}_rmM${sd}sd/chr${c}.SGV.id.lds_1_maf_1
+SV_grm=z${ldp}_${spl}_rmM${sd}sd/chr${c}.SV.id.lds_1_maf_1
 
 # cv_N is mean cv_N of SVs
 for q2 in 0.2 0.3 0.4; do 
@@ -452,52 +452,52 @@ rc=$(cat ${meta_F}|sed -n "${sn}p"|awk '{print $3}')
 cvt=$(cat ${meta_F}|sed -n "${sn}p"|awk '{print $4}')
 
 for spe in main_jt;do  # total scenarios: 2430
-aimD=zzSim_spe_${spe}
-for sd in 0 ;do
-for ARR in STA ; do # only run STA
-for ldp in Split; do # 1 bin (no bin) also used Split since it does not matter
-for ln_mn in 1-1 ;do
-ln=$(echo $ln_mn|awk -F'-' '{print $1}')
-mn=$(echo $ln_mn|awk -F'-' '{print $2}')
-spl=l${ln}m${mn}
-for q2 in 0.2 0.3 0.4 ; do 
-for cv_N in 30 60 90 ; do 
+	aimD=zzSim_spe_${spe}
+	for sd in 0 ;do
+		for ARR in STA ; do # only run STA
+			for ldp in Split; do # 1 bin (no bin) also used Split since it does not matter
+				for ln_mn in 1-1 ;do
+					ln=$(echo $ln_mn|awk -F'-' '{print $1}')
+					mn=$(echo $ln_mn|awk -F'-' '{print $2}')
+					spl=l${ln}m${mn}
+					for q2 in 0.2 0.3 0.4 ; do 
+						for cv_N in 30 60 90 ; do 
 
-ori_out_F=${aimD}/${spe}_M${sd}sd_${region}_chr${c}_all_Joint.txt
+						ori_out_F=${aimD}/${spe}_M${sd}sd_${region}_chr${c}_all_Joint.txt
 
-sce_out_F=${tmpD}/Joint_${spe}_sd${sd}_${region}_chr${c}_all_Joint_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its
-sce_out_F_sa=${tmpD}/Joint_${spe}_sd${sd}_${region}_chr${c}_all_Joint_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_sa
-sce_out_F_getPos=${tmpD}/Joint_${spe}_sd${sd}_${region}_chr${c}_all_Joint_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its_getPos
+						sce_out_F=${tmpD}/Joint_${spe}_sd${sd}_${region}_chr${c}_all_Joint_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its
+						sce_out_F_sa=${tmpD}/Joint_${spe}_sd${sd}_${region}_chr${c}_all_Joint_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_sa
+						sce_out_F_getPos=${tmpD}/Joint_${spe}_sd${sd}_${region}_chr${c}_all_Joint_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its_getPos
 
-cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w its|\
-sort -t ',' -k15 -g|awk -v OFS=',' '{print $0,NR}' > ${sce_out_F}
+						cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w its|\
+						sort -t ',' -k15 -g|awk -v OFS=',' '{print $0,NR}' > ${sce_out_F}
 
-cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w sa > ${sce_out_F_sa}
+						cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w sa > ${sce_out_F_sa}
 
 
-TL=$(cat ${sce_out_F}|tail -n1|awk -F',' '{print $17}')
+						TL=$(cat ${sce_out_F}|tail -n1|awk -F',' '{print $17}')
 
-for rank in $(seq 1 ${TL}); do
+							for rank in $(seq 1 ${TL}); do
 
-rep=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $4}')
-FoS=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $1}')
+								rep=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $4}')
+								FoS=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $1}')
 
-if [ $FoS == 'su' ]; then
-cat ${sce_out_F_sa}|grep -w ${rep}|awk -F',' '{print $0}' >> ${sce_out_F_getPos}
-fi
+								if [ $FoS == 'su' ]; then
+									cat ${sce_out_F_sa}|grep -w ${rep}|awk -F',' '{print $0}' >> ${sce_out_F_getPos}
+								fi
 
-if [ $FoS == 'fa' ]; then
-echo -e "fa,main_jt,sd${sd},${rep},${region},chr${c},all,Joint,qsq${q2},N${cv_N},${rc},${cvt},iterR,,," >> ${sce_out_F_getPos}
-fi
+								if [ $FoS == 'fa' ]; then
+									echo -e "fa,main_jt,sd${sd},${rep},${region},chr${c},all,Joint,qsq${q2},N${cv_N},${rc},${cvt},iterR,,," >> ${sce_out_F_getPos}
+								fi
 
-done
+							done
 
-done
-done
-done
-done
-done
-done
+						done
+					done
+				done
+			done
+		done
+	done
 done
 
 mv ${tmpD}/*txt_rank_by_its_getPos ${aimD}/zSce
@@ -523,52 +523,52 @@ rc=$(cat ${meta_F}|sed -n "${sn}p"|awk '{print $4}')
 cvt=$(cat ${meta_F}|sed -n "${sn}p"|awk '{print $5}')
 
 for spe in main_mg;do  # total scenarios: 2430 * 2
-aimD=zzSim_spe_${spe}
-for sd in 0 ;do
-for ARR in STA ; do # only run STA
-for ldp in Split; do # 1 bin (no bin) also used Split since it does not matter
-for ln_mn in 1-1 ;do
-ln=$(echo $ln_mn|awk -F'-' '{print $1}')
-mn=$(echo $ln_mn|awk -F'-' '{print $2}')
-spl=l${ln}m${mn}
-for q2 in 0.2 0.3 0.4 ; do 
-for cv_N in 30 60 90 ; do 
+	aimD=zzSim_spe_${spe}
+	for sd in 0 ;do
+		for ARR in STA ; do # only run STA
+			for ldp in Split; do # 1 bin (no bin) also used Split since it does not matter
+				for ln_mn in 1-1 ;do
+					ln=$(echo $ln_mn|awk -F'-' '{print $1}')
+					mn=$(echo $ln_mn|awk -F'-' '{print $2}')
+					spl=l${ln}m${mn}
+					for q2 in 0.2 0.3 0.4 ; do 
+						for cv_N in 30 60 90 ; do 
 
-ori_out_F=${aimD}/${spe}_M${sd}sd_${region}_chr${c}_all_${out}.txt
+							ori_out_F=${aimD}/${spe}_M${sd}sd_${region}_chr${c}_all_${out}.txt
 
-sce_out_F=${tmpD}/${out}_${spe}_sd${sd}_${region}_chr${c}_all_Marginal_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its
-sce_out_F_sa=${tmpD}/${out}_${spe}_sd${sd}_${region}_chr${c}_all_Marginal_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_sa
-sce_out_F_getPos=${tmpD}/${out}_${spe}_sd${sd}_${region}_chr${c}_all_Marginal_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its_getPos
+							sce_out_F=${tmpD}/${out}_${spe}_sd${sd}_${region}_chr${c}_all_Marginal_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its
+							sce_out_F_sa=${tmpD}/${out}_${spe}_sd${sd}_${region}_chr${c}_all_Marginal_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_sa
+							sce_out_F_getPos=${tmpD}/${out}_${spe}_sd${sd}_${region}_chr${c}_all_Marginal_qsq${q2}_N${cv_N}_${rc}_${cvt}.txt_rank_by_its_getPos
 
-cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w its|\
-sort -t ',' -k14 -g|awk -v OFS=',' '{print $0,NR}' > ${sce_out_F}
+							cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w its|\
+							sort -t ',' -k14 -g|awk -v OFS=',' '{print $0,NR}' > ${sce_out_F}
 
-cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w sa > ${sce_out_F_sa}
+							cat ${ori_out_F}|grep -w ${spe}|grep -w sd${sd}|grep -w ${region}|grep -w chr${c}|grep -w qsq${q2}|grep -w N${cv_N}|grep -w ${rc}|grep -w ${cvt}|grep -w sa > ${sce_out_F_sa}
 
 
-TL=$(cat ${sce_out_F}|tail -n1|awk -F',' '{print $15}')
+							TL=$(cat ${sce_out_F}|tail -n1|awk -F',' '{print $15}')
 
-for rank in $(seq 1 ${TL}); do
+							for rank in $(seq 1 ${TL}); do
 
-rep=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $4}')
-FoS=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $1}')
+								rep=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $4}')
+								FoS=$(cat ${sce_out_F}|sed -n "${rank}p"|awk -F',' '{print $1}')
 
-if [ $FoS == 'su' ]; then
-cat ${sce_out_F_sa}|grep -w ${rep}|awk -F',' '{print $0}' >> ${sce_out_F_getPos}
-fi
+								if [ $FoS == 'su' ]; then
+									cat ${sce_out_F_sa}|grep -w ${rep}|awk -F',' '{print $0}' >> ${sce_out_F_getPos}
+								fi
 
-if [ $FoS == 'fa' ]; then
-echo -e "fa,main_mg,sd${sd},${rep},${region},chr${c},all,Marginal,qsq${q2},N${cv_N},${rc},${cvt},iterR," >> ${sce_out_F_getPos}
-fi
+								if [ $FoS == 'fa' ]; then
+									echo -e "fa,main_mg,sd${sd},${rep},${region},chr${c},all,Marginal,qsq${q2},N${cv_N},${rc},${cvt},iterR," >> ${sce_out_F_getPos}
+								fi
 
-done
+							done
 
-done
-done
-done
-done
-done
-done
+						done
+					done
+				done
+			done
+		done
+	done
 done
 
 mv ${tmpD}/*txt_rank_by_its_getPos ${aimD}/zSce

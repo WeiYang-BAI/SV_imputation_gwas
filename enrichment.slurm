@@ -4,17 +4,16 @@ c=${SLURM_ARRAY_TASK_ID}
 
 M=M23s5F
 
-# covar: type, length, maf, impuRsq, distance to TSS
+# covar: type, length, maf, impuRsq, distance to SS and TSS
 
 vid_D=GENOTYPE/HGSVC2_HPRCY1/EUR
 anno_D=ANNOTATE/HGSVC2_HPRCY1/SV_base_AnnotSV
 gwa_D=GWAS/fastGWA_ori_T74/EUR/50
 rsq_D=IMPUTATION/HGSVC2_HPRCY1
 vep_D=ANNOTATE/HGSVC2_HPRCY1/SV_base_vep
-
 em_D=ENRICHMENT
 
-rm ${em_D}/covar_maf0.01_SV/chr${c}.vid.type.len.frq.ImpuRsq.dtss.dss.covar
+rm -rf ${em_D}/covar_maf0.01_SV/chr${c}.vid.type.len.frq.ImpuRsq.dtss.dss.covar
 
 for vid in $(cat ${vid_D}/HGSVC2_HPRCY1.${M}.EUR.chr${c}.SV.maf0.01.hwe-6.bim|awk '{print $2}');do
 
@@ -37,25 +36,16 @@ done
 
 
 meta_D=meta_info/chromatin_state_EpiMap
-
 cs_D=chromatin_state_processed_bed
-
 sv_bed_F=HGSVC2_HPRCY1.chrAuto.stage2.SV.s5.cr50.AnnotSV.bed
 ov_D=chromatin_state_ov
 
 
 cell=$(cat ${meta_D}/MNEMONIC.sort.uniq_has_data.txt|sed -n "${sn}p"|awk '{print $1}')
-
 bed_files=$(ls /storage/yangjianLab/sharedata/functional_annotation/EpiMap/chromatin_state/persample/${cell}_*)
-
 for anot in $(cat ${meta_D}/chromatin_states.txt);do
-
-zcat ${bed_files}|sed 's/\//_/g'|grep -w ${anot}|awk -v OFS='\t' '{print $1,$2,$3}'|bedtools sort|bedtools merge|awk -v OFS='\t' '{print $1,$2,$3,"'${anot}'"}' >\
-${cs_D}/${cell}__${anot}.bed
-
-# get if ov
+zcat ${bed_files}|sed 's/\//_/g'|grep -w ${anot}|awk -v OFS='\t' '{print $1,$2,$3}'|bedtools sort|bedtools merge|awk -v OFS='\t' '{print $1,$2,$3,"'${anot}'"}' > ${cs_D}/${cell}__${anot}.bed
 bedtools annotate -i ${sv_bed_F} -files ${cs_D}/${cell}__${anot}.bed|awk -v OFS='\t' '{if($5>0) print $4,$4,1; else print $4,$4,0}' > ${ov_D}/${cell}__${anot}.chromatin_state_EpiMap.SV.ov
-
 done
 
 
@@ -64,31 +54,20 @@ rbp_D=RBP_eCLIP_processed_bed
 ov_D=RBP_eCLIP_ov
 
 for sn in $(seq 1 2);do
-
 if [ $sn -eq 1 ]; then cell=HepG2; else cell=K562; fi
-
 bed_files=$(cat ${meta_D}/rbp_bed_encode.info|grep -w ${cell}|awk -F'\t' '{print $1".bed.gz"}')
-
 
 # get in ori Bed file dir
 cd /storage/yangjianLab/baiweiyang/Reference_data/ENCODE_RBP_eCLIP_GRCh38
-
-# get beds file with fc > 2 and -logP >5, and sort merge
 zcat ${bed_files}|awk -v OFS='\t' '{if($7>2 && $8>5) print $1,$2,$3}'|bedtools sort|bedtools merge > ${rbp_D}/${cell}.allRBP.fc2.1e-5.sort.merge.bed
-
-# get if ov
 bedtools annotate -i ${sv_bed_F} -files ${rbp_D}/${cell}.allRBP.fc2.1e-5.sort.merge.bed|awk -v OFS='\t' '{if($5>0) print $4,$4,1; else print $4,$4,0}' > ${ov_D}/${cell}.allRBP.fc2.1e-5.sort.merge.SV.ov
 done
 
 ov_D=TAD_boundary_ov
-
 ori_D=3D_Genome/hg38/zDoTADs
 
 for sn in $(seq 1 40);do
-
 cell=$(cat ${meta_D}/TAD_boundary_file.txt|sed -n "${sn}p"|awk '{print $1}')
-
-# get if ov
 bedtools annotate -i ${sv_bed_F} -files ${ori_D}/${cell}|awk -v OFS='\t' '{if($5>0) print $4,$4,1; else print $4,$4,0}' > ${ov_D}/${cell}.sort.merge.SV.ov
 done
 
@@ -152,14 +131,12 @@ write.table(summary_data, output_file, quote = F, sep = " ", row.names = F, col.
 phenoDir=PHENOTYPE
 
 for i in $(ls|grep _ov$);do
-
-Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/14.ENRICHMENT/4_logistic_regression/4_regression.R \
+Rscript --slave --no-save 4_regression.R \
 ${i} \
 sig_or_not_X/SV_sig-or-not.txt \
 covar_maf0.01_SV/chrAuto.vid.type.len.frq.ImpuRsq.dtss.dss.covar \
 ${i}_regression/${i}.SV.logistic.lr \
 covar_maf0.01_SV/zIndep.SV.id.two.col
-
 done
 
 

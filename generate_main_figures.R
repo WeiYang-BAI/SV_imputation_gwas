@@ -331,7 +331,7 @@ p2
 
 
 data=fread('J3.JOINT_impu_performance/plot/estiR2/zGROUP_77_pop5_s5_2t_estiR2.txt')
-data=subset(data, data$MafBin!='< 1%')
+#data=subset(data, data$MafBin!='< 1%')
 
 data$MafBin<-factor(data$MafBin,c("< 1%","1-5%","5-10%","10-20%","20-50%"))
 data$array<-factor(data$array,c('UKBA', 'MEGA', 'OMNI-2.5M', 'Pre-imputed', 'STArsq08', 'Short-read WGS'))
@@ -361,7 +361,6 @@ data=fread('J8.Real_Rsq_VNTR/plot/GP1_ARR5_M1_CATE6_DY')
 data$array<-factor(data$array,c('UKBA', 'MEGA', 'OMNI-2.5M', 'Pre-imputed', 'Short-read WGS'))
 data$cate<-factor(data$cate,c('all imputed loci', 'rmImpuSGT', 'rmImpuDBT', 'omit singleton repeats', 'rmUniq_rmImpuSGT', 'rmUniq_rmImpuDBT'))
 
-data=subset(data,data$DY=='0')
 data=subset(data,data$cate!='rmUniq_rmImpuDBT')
 data=subset(data,data$cate!='rmUniq_rmImpuSGT')
 data=subset(data,data$cate!='rmImpuDBT')
@@ -629,7 +628,6 @@ rownames(annotation_row) = name
 ####
 
 data=fread('14.ENRICHMENT/plot/chromatin_state_ov.SV.logistic.noRsqDss.indep.lr.mini350')
-data=subset(data,data$Tissue=='BLD'|data$Tissue=='BONE'|data$Tissue=='REPR'|data$Tissue=='MUSC'|data$Tissue=='BRN'|data$Tissue=='EYE'|data$Tissue=='KDNY'|data$Tissue=='LVR'|data$Tissue=='LNG'|data$Tissue=='PANC'|data$Tissue=='REPR'|data$Tissue=='SPLN')
 
 data$dire=NA
 data$dire[data$OR<1]=0.5
@@ -670,8 +668,6 @@ g11 <- cowplot::as_gtable(g1$gtable)
 
 
 data=fread('14.ENRICHMENT/plot/histone_modi_ov.SV.logistic.noRsqDss.indep.lr')
-data=subset(data,data$histone=='H3K4me1'|data$histone=='H3K4me3'|data$histone=='H3K36me3'|data$histone=='H3K27me3'|data$histone=='H3K9me3'|data$histone=='H3K27ac'|data$histone=='H3K9ac')
-data=subset(data,data$cell=='astrocyte'|data$cell=='CD14-positive_monocyte'|data$cell=='DND-41'|data$cell=='endodermal_cell'|data$cell=='endothelial_cell_of_umbilical_vein'|data$cell=='fibroblast_of_dermis'|data$cell=='GM12878'|data$cell=='H1'|data$cell=='H9'|data$cell=='HCT116'|data$cell=='HeLa-S3'|data$cell=='hepatocyte'|data$cell=='HepG2'|data$cell=='HUES64'|data$cell=='IMR-90'|data$cell=='K562'|data$cell=='Karpas-422'|data$cell=='keratinocyte'|data$cell=='mammary_epithelial_cell'|data$cell=='MCF-7'|data$cell=='mesenchymal_stem_cell'|data$cell=='MM.1S'|data$cell=='myotube'|data$cell=='NCI-H929'|data$cell=='neural_progenitor_cell'|data$cell=='OCI-LY1'|data$cell=='OCI-LY3'|data$cell=='PC-3'|data$cell=='PC-9'|data$cell=='SK-N-SH'|data$cell=='skeletal_muscle_myoblast'|data$cell=='smooth_muscle_cell'|data$cell=='trophoblast_cell')
 
 
 data_OR=data.frame(data$cell,data$histone,data$OR)
@@ -810,7 +806,6 @@ p1
 
 # pleiotropic  D8_HGSVC2_HPRCY1_108290
 data=fread('08.eQTL/zCherry_GWAS_exp/D8_HGSVC2_HPRCY1_108290.copy.sid.exp.multi-gets')
-#data=subset(data,data$tissue=='Liver'|data$tissue=='Small_Intestine_Terminal_Ileum'|data$tissue=='Spleen')
 data=subset(data,data$gene=='UGT2B17')
 data$tissue=factor(data$tissue,c('Liver','Spleen','Testis','Lung','Whole_Blood','Small_Intestine_Terminal_Ileum','Colon_Transverse','Colon_Sigmoid','Cells_EBV-transformed_lymphocytes'))
 
@@ -890,7 +885,6 @@ data=subset(data,data$trait=='Gamma Glutamyltransferase')
 
 
 data = read.table('06.VNTR/fine_plot/candidate/three_sig/formatted.HGSVC2_HPRCY1_HG38_chr1_247870261_247871078_75.tsv', sep='\t', header = T)
-data=subset(data,data$trait!='Red Blood Cell Distribution Width' & data$trait!='Platelet Cout' & data$trait!='Mean Platelet Volume' & data$trait!='Platelet Distribution Width')
 (p2 <- ggplot(data, aes(x=genoCN, y=phenoAVG, color=as.factor(trait)))+
     geom_segment(aes(x = genoCN, y = frq/1.1 - 0.07, xend = genoCN, yend = -0.07), size = 4.2, colour =  "#A9B4C0")+
     geom_line(linetype=1,cex=0.7)+
@@ -959,7 +953,6 @@ c
 
 data=fread('08.eQTL/zCherry_GWAS_exp/HGSVC2_HPRCY1_HG38_chr22_24605024_24606149_7.copy.sid.exp.GGT1.TS6')
 data$copyINT=round(data$copy, digits = 0)
-#data=subset(data,data$copyINT>-17)
 data=subset(data,data$tissue=='Thyroid')
 
 data_summary <- data %>%

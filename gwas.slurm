@@ -1,20 +1,13 @@
 #!/bin/bash
 
-tr=6
-sn=${SLURM_ARRAY_TASK_ID}
+tr=6; sn=${SLURM_ARRAY_TASK_ID}
 
 
 if [ $sn -gt 2088 ]; then cob=C; REPLACE_model=fastGWA-mlm; else cob=B; REPLACE_model=fastGWA-mlm-binary; fi
 
-T2740_filePath_F=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_final/PHENOTYPE/infos/both.final.2740.filePath
+filePath_F=both.final.filePath; geno_D=GENOTYPE; GRM_D=GRM; GWAS_D=GWAS; ori_covar_F=UKB_All_covariates.covar
 
-phe=$(cat ${T2740_filePath_F} | sed -n "${sn}p" | awk -F'/' '{print $8}' | awk -F'.pheno' '{print $1}')
-pheno_F=$(cat ${T2740_filePath_F} | sed -n "${sn}p")
-
-geno_D=GENOTYPE; GRM_D=GRM; GWAS_D=GWAS
-
-ori_covar_F=UKB_All_covariates.covar
-
+phe=$(cat ${filePath_F} | sed -n "${sn}p" | awk -F'/' '{print $8}' | awk -F'.pheno' '{print $1}'); pheno_F=$(cat ${filePath_F} | sed -n "${sn}p")
 
 for pop in EUR ; do
 
@@ -77,25 +70,15 @@ for pop in EUR ; do
 
 			# get cojo-slct var genotype 0 1 2
 			${gcta64} --mbfile ${geno_mbfile_F} --extract ${cojo_sclt_varid} --recode-nomiss --thread-num ${tr} --out ${cojo_slct_012}
-
-			gunzip ${cojo_slct_012}.xmat.gz
-
-			cat ${cojo_slct_012}.xmat | awk '{$1="";print $0}' | sed 's/^ //' | sed '2d' > ${cojo_slct_012}.xmat.F && rm ${cojo_slct_012}.xmat
+			gunzip ${cojo_slct_012}.xmat.gz; cat ${cojo_slct_012}.xmat | awk '{$1="";print $0}' | sed 's/^ //' | sed '2d' > ${cojo_slct_012}.xmat.F && rm ${cojo_slct_012}.xmat
 
 			## make new covar with cojo-slct var genotype 0 1 2
-			generate_new_covar_R_script=/home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/05.GWAS/1_fastGWA_COJO_CONDI_T74/1_make_new_covar.R
-
-			conda deactivate
-			conda activate R-3.6.3
-
+			generate_new_covar_R_script=1_make_new_covar.R
 			Rscript --slave --no-save ${generate_new_covar_R_script} ${cojo_slct_012}.xmat.F ${ori_covar_F} ${cojo_slct_012}.covar
 
 			# rerun fastGWA
-
 			mkdir -p ${GWAS_D}/fastGWA_condi_bench/${pop}/${phe}
-
 			assoc_condi=${GWAS_D}/fastGWA_condi_bench/${pop}/${phe}/${phe}.Merged.${pop}.maf0.01.hwe-6.chrAuto.condi_${vTYPE}.cojo-slct
-
 			${gcta64} --mbfile ${geno_mbfile_F} --qcovar ${cojo_slct_012}.covar --grm-sparse ${spGRM_F} --${REPLACE_model} --pheno ${pheno_F} --maf 0.01 --thread-num ${tr} --out ${assoc_condi}
 		fi
 	done
@@ -105,9 +88,7 @@ done
 
 
 
-pop=EUR
-
-clumpDir=GWAS/clump_bench
+pop=EUR; clumpDir=GWAS/clump_bench
 
 # 2p(1-p)b^2 / var(y)
 phe=$(cat ${phenoDir}/infos/Continuous.final.fieldID.652|sed -n "${sn}p" | awk '{print $1}')
@@ -136,7 +117,6 @@ for c in $(seq 1 22);do
 	for vT in SV SGV TWO; do
 
 		VAR_P_file=${fastGWA_ori}/${pop}/${phe}/zChr/${phe}.Merged.${pop}.maf0.01.hwe-6.chr${c}.fastGWA.${vT}.P.5e-8
-
 		plink --bfile ${LD_bfile} --clump ${VAR_P_file} --clump-p1 5e-8 --clump-p2 5e-8 --clump-r2 0.01 --clump-kb 500 --out ${clumpDir}/${pop}/${phe}/clump.0.01.chr${c}.${vT}
 
 		if [ -s "${clumpDir}/${pop}/${phe}/clump.0.01.chr${c}.${vT}.clumped" ]; then
@@ -166,7 +146,7 @@ for vT in SV SGV TWO TWO_SV TWO_SGV;do
 
 		done
 
-		Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_s5_2t/05.GWAS/11_individual_hsq/11_calculate_individual_hsq.R \
+		Rscript --slave --no-save 11_calculate_individual_hsq.R \
 		${phe} ${vT} ${pheno_F_1} ${pheno_F_2} ${indi_hsq_D}/${pop}/${phe}/clump.0.01.${vT}.af.beta ${indi_hsq_D}/${pop}/${phe}/clump.0.01.${vT}.af.beta.indi-hsq
 
 	fi

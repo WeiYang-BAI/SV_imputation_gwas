@@ -23,7 +23,7 @@ library(ImageGP)
 library(patchwork)
 library(ggpointdensity)
 
-man_theme <- ggthemr('fresh')
+man_theme = ggthemr('fresh')
 
 theme_set(
   man_theme$theme +
@@ -51,11 +51,11 @@ data = read.table('J1.JOINT_make_stage2-3_var/plot/VAR_count_264_assemblies_md09
 
 data=subset(data,data$SOURCE != "1KCP")
 
-data$VTYPE <- factor(data$VTYPE, levels = c('SV', 'INDEL', 'SNP'))
-data$CONFIDENCE <- factor(data$CONFIDENCE, levels = c('low', 'high'))
+data$VTYPE = factor(data$VTYPE, levels = c('SV', 'INDEL', 'SNP'))
+data$CONFIDENCE = factor(data$CONFIDENCE, levels = c('low', 'high'))
 
 #### base count
-a <- ggplot(data,aes(CALLER,NUM/1000))+ 
+a = ggplot(data,aes(CALLER,NUM/1000))+ 
   geom_violin(aes(fill=CALLER),width=0.6,cex=0.1)+ 
   facet_grid(VTYPE ~ CONFIDENCE, scales = "free", labeller = labeller(CONFIDENCE = c(low = "Raw set", high = "Filtered set")))+
   labs(x = "",y = "Number of variants (K)") + 
@@ -69,8 +69,8 @@ a
 
 
 # three tools reci benchmark
-data<-read.table("J1.JOINT_make_stage2-3_var/plot/reco_bmk_132_samples.tsv", head=T, sep='\t')
-data$CALLER <- factor(data$CALLER, levels = c('dipcall vs. SVIM-asm', 'SVIM-asm vs. dipcall', 
+data=read.table("J1.JOINT_make_stage2-3_var/plot/reco_bmk_132_samples.tsv", head=T, sep='\t')
+data$CALLER = factor(data$CALLER, levels = c('dipcall vs. SVIM-asm', 'SVIM-asm vs. dipcall', 
                                               'dipcall vs. PAV', 'PAV vs. dipcall', 
                                               'SVIM-asm vs. PAV', 'PAV vs. SVIM-asm'))
 Data=subset(data,data$SOURCE != "1KCP")
@@ -86,8 +86,8 @@ b
 
 # called HG002 vs GIAB 
 data=fread('J1.JOINT_make_stage2-3_var/plot/called_bench_HG002_v0.6.txt')
-data$caller<-factor(data$caller,c('dipcall', 'PAV', 'SVIM-asm', 'Merged'))
-data$metric<-factor(data$metric,c('Recall', 'Precision', 'F1', 'GT concordance'))
+data$caller=factor(data$caller,c('dipcall', 'PAV', 'SVIM-asm', 'Merged'))
+data$metric=factor(data$metric,c('Recall', 'Precision', 'F1', 'GT concordance'))
 
 colors2=c("#264a5f","#d15034","#f1ae2d","grey")
 
@@ -123,7 +123,7 @@ d=ggplot(data, aes(x=threshold, y=last_diff, group=feature, color=feature)) +
 d
 
 
-layout <- "
+layout = "
 AAABBB
 CCCDDD
 "
@@ -141,11 +141,11 @@ ggsave('SF_base_call.pdf', p, width = 12, height = 10)
 
 data=fread('09.ANNOTATE/plot/basic_anno_VNTR.txt')
 
-data$type<-factor(data$type,c('Intergenic', 'Intra-intron', 'Intra-exon', 'Splicing site', '5UTR', '3UTR', 'Whole transcript'))
-data$proportion <- data$num / sum(data$num)
+data$type=factor(data$type,c('Intergenic', 'Intra-intron', 'Intra-exon', 'Splicing site', '5UTR', '3UTR', 'Whole transcript'))
+data$proportion = data$num / sum(data$num)
 
 #去掉背景网格
-fig1 <- ggplot(data,aes(x=type,y=num,fill =type )) + geom_bar(stat='identity',position=position_dodge(), width = 0.75) +
+fig1 = ggplot(data,aes(x=type,y=num,fill =type )) + geom_bar(stat='identity',position=position_dodge(), width = 0.75) +
   labs(x=NULL,y=NULL)+    #使用labs自定义x轴和y轴标签名字
   coord_cartesian(ylim = c(0,250)) +  #使用ylim设置下面一半的范围
   geom_text(aes(label = paste0(round(proportion * 100, digits=2), "%")), 
@@ -159,7 +159,7 @@ fig1 <- ggplot(data,aes(x=type,y=num,fill =type )) + geom_bar(stat='identity',po
 fig1 #下面半部分
 
 
-fig2 <- ggplot(data,aes(x=type,y=num,fill =type )) + geom_bar(stat='identity',position=position_dodge(), width = 0.75) +
+fig2 = ggplot(data,aes(x=type,y=num,fill =type )) + geom_bar(stat='identity',position=position_dodge(), width = 0.75) +
   labs(x=NULL,y="Number of VNTR") +   #上面半部分标签不需要添加
   coord_cartesian(ylim = c(6500,8500)) +  #使用ylim设置上面一半的范围
   geom_text(aes(label = paste0(round(proportion * 100, digits=2), "%")), 
@@ -187,13 +187,13 @@ ggsave('SF_basic_anno_VNTR.pdf', p, width = 6, height = 5)
 
 data=fread('J3.JOINT_impu_performance/plot/estiR2/zGROUP_77_pop5_s5_2t_estiR2.txt')
 
-data$MafBin<-factor(data$MafBin,c("< 1%","1-5%","5-10%","10-20%","20-50%"))
-data$array<-factor(data$array,c('UKBA', 'MEGA', 'OMNI-2.5M', 'Imputed_A', 'STArsq08', 'Short-read WGS'))
-data$pop<-factor(data$pop,c('AFR', 'AMR', 'EUR', 'SAS', 'EAS'))
+data$MafBin=factor(data$MafBin,c("< 1%","1-5%","5-10%","10-20%","20-50%"))
+data$array=factor(data$array,c('UKBA', 'MEGA', 'OMNI-2.5M', 'Imputed_A', 'STArsq08', 'Short-read WGS'))
+data$pop=factor(data$pop,c('AFR', 'AMR', 'EUR', 'SAS', 'EAS'))
 
 data=subset(data,data$array=='Short-read WGS')
 data=subset(data,data$model=='with INDELs' | data$model=='without INDELs')
-data$model<-factor(data$model,c('without INDELs', 'with INDELs'))
+data$model=factor(data$model,c('without INDELs', 'with INDELs'))
 #data=subset(data,data$pop=='EUR')
 data=subset(data,data$array!='STArsq08')
 data=subset(data,data$array!='MEGA')
@@ -203,7 +203,7 @@ data=subset(data,data$group=='HGSVC2_HPRCY1')
 
 colors=c("#d00000","#ffba08","#0077b6","#bc6c25","#959595")
 #colors=c("#e07a5f","#457b9d","#81b29a","#f2cc8f")
-man_theme <- ggthemr('pale')
+man_theme = ggthemr('pale')
 p1=ggplot(data, aes(x=MafBin, y=R2_mean,group=model,color=model)) + # show pop
   geom_line(size=0.65) +
   #geom_point(size=1) +
@@ -233,9 +233,9 @@ ggsave('SF_R2_M18s5F_M23s5F_WGS_meanRsq.pdf', p1, width = 8, height = 5)
 data=fread('J3.JOINT_impu_performance/plot/estiR2/zGROUP_77_pop5_s5_2t_estiR2.txt')
 #data=subset(data, data$MafBin!='< 1%')
 
-data$MafBin<-factor(data$MafBin,c("< 1%","1-5%","5-10%","10-20%","20-50%"))
-data$array<-factor(data$array,c('UKBA', 'MEGA', 'OMNI-2.5M', 'Pre-imputed', 'STArsq08', 'Short-read WGS'))
-data$pop<-factor(data$pop,c('AFR', 'AMR', 'EUR', 'SAS', 'EAS'))
+data$MafBin=factor(data$MafBin,c("< 1%","1-5%","5-10%","10-20%","20-50%"))
+data$array=factor(data$array,c('UKBA', 'MEGA', 'OMNI-2.5M', 'Pre-imputed', 'STArsq08', 'Short-read WGS'))
+data$pop=factor(data$pop,c('AFR', 'AMR', 'EUR', 'SAS', 'EAS'))
 
 data=subset(data,data$model=='without INDELs')
 data=subset(data,data$array!='STArsq08')
@@ -280,7 +280,7 @@ data=fread('04.GREML/res_plot/s5_2t/aframr/P3.comapre.hsq', col.names = c('pop',
 data$hsq=round(data$hsq, 6)
 data=subset(data,data$pop=="AMR")
 
-data$hTYPE<-factor(data$hTYPE,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
+data$hTYPE=factor(data$hTYPE,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
 
 SGV_margin=subset(data,data$hTYPE=="SGVs (marginal)")
 SV_margin=subset(data,data$hTYPE=="SVs (marginal)")
@@ -304,7 +304,7 @@ data=fread('04.GREML/res_plot/s5_2t/aframr/P3.comapre.hsq', col.names = c('pop',
 data$hsq=round(data$hsq, 6)
 data=subset(data,data$pop=="AFR")
 
-data$hTYPE<-factor(data$hTYPE,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
+data$hTYPE=factor(data$hTYPE,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
 
 SGV_margin=subset(data,data$hTYPE=="SGVs (marginal)")
 SV_margin=subset(data,data$hTYPE=="SVs (marginal)")
@@ -328,7 +328,7 @@ data=fread('04.GREML/res_plot/s5_2t/aframr/P3.comapre.hsq', col.names = c('pop',
 data$hsq=round(data$hsq, 6)
 data=subset(data,data$pop=="EUR")
 
-data$hTYPE<-factor(data$hTYPE,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
+data$hTYPE=factor(data$hTYPE,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
 
 SGV_margin=subset(data,data$hTYPE=="SGVs (marginal)")
 SV_margin=subset(data,data$hTYPE=="SVs (marginal)")
@@ -347,7 +347,7 @@ c=ggplot(data,aes(hTYPE,hsq))+
   theme(legend.position = 'none')
 
 
-layout <- "
+layout = "
 A
 B
 C
@@ -370,9 +370,9 @@ for(x in 1:lengths(xlist)){
              col.names = c("FoS", "gp", "rmMsd", "rep","region", "chr", "lds_pool",
                            "model", "q2", "cv_n", "RC", "cv_type", "iter", "mg_sv"), sep=',')
   
-  data$mg_sv <- na.approx(data$mg_sv, rule=2)
+  data$mg_sv = na.approx(data$mg_sv, rule=2)
   
-  data_long<-melt(
+  data_long=melt(
     data,                       #待转换的数据集名称
     id.vars=c("FoS", "gp", "rmMsd", "rep","region", "chr", "lds_pool",
               "model", "q2", "cv_n", "RC", "cv_type", "iter"),  #要保留的主字段
@@ -401,9 +401,9 @@ for(x in 1:lengths(xlist)){
              col.names = c("FoS", "gp", "rmMsd", "rep","region", "chr", "lds_pool",
                            "model", "q2", "cv_n", "RC", "cv_type", "iter", "mg_sgv"), sep=',')
   
-  data$mg_sgv <- na.approx(data$mg_sgv, rule=2)
+  data$mg_sgv = na.approx(data$mg_sgv, rule=2)
   
-  data_long<-melt(
+  data_long=melt(
     data,                       #待转换的数据集名称
     id.vars=c("FoS", "gp", "rmMsd", "rep","region", "chr", "lds_pool",
               "model", "q2", "cv_n", "RC", "cv_type", "iter"),  #要保留的主字段
@@ -434,11 +434,11 @@ for(x in 1:lengths(xlist)){
                            "model", "q2", "cv_n", "RC", "cv_type", "iter", 
                            "jt_sgv", "jt_sv", "jt_sum"), sep=',')
   
-  data$jt_sgv <- na.approx(data$jt_sgv, rule=2)
-  data$jt_sv <- na.approx(data$jt_sv, rule=2)
-  data$jt_sum <- na.approx(data$jt_sum, rule=2)
+  data$jt_sgv = na.approx(data$jt_sgv, rule=2)
+  data$jt_sv = na.approx(data$jt_sv, rule=2)
+  data$jt_sum = na.approx(data$jt_sum, rule=2)
   
-  data_long<-melt(
+  data_long=melt(
     data,                       #待转换的数据集名称
     id.vars=c("FoS", "gp", "rmMsd", "rep","region", "chr", "lds_pool",
               "model", "q2", "cv_n", "RC", "cv_type", "iter"),  #要保留的主字段
@@ -482,11 +482,11 @@ for(x in 1:lengths(xlist)){
                            "model", "q2", "cv_n", "RC", "cv_type", "iter", 
                            "jt_sgv", "jt_sv", "jt_sum"), sep=',')
   
-  data$jt_sgv <- na.approx(data$jt_sgv, rule=2)
-  data$jt_sv <- na.approx(data$jt_sv, rule=2)
-  data$jt_sum <- na.approx(data$jt_sum, rule=2)
+  data$jt_sgv = na.approx(data$jt_sgv, rule=2)
+  data$jt_sv = na.approx(data$jt_sv, rule=2)
+  data$jt_sum = na.approx(data$jt_sum, rule=2)
   
-  data_long<-melt(
+  data_long=melt(
     data,                       #待转换的数据集名称
     id.vars=c("FoS", "gp", "rmMsd", "rep","region", "chr", "lds_pool",
               "model", "q2", "cv_n", "RC", "cv_type", "iter"),  #要保留的主字段
@@ -518,11 +518,11 @@ data=fread('mean_impu_all_with_diff_en_m2080_add.csv',
                          "sv_ratio", "Components", "Estimates"), sep=',')
 
 
-data$`Causal regions`<-factor(data$`Causal regions`,c('Whole regions', 'cCRE regions', 'Complex regions', 'Enriched cCRE regions', 'Enriched complex regions'))
-data$Chromosome<-factor(data$Chromosome,c('chr2', 'chr10', 'chr20'))
-data$Model<-factor(data$Model,c('Marginal analysis', 'Joint analysis', 'LD1M1', 'LD1M6', 'LD2M3', 'LD3M2', 'LD6M1'))
-data$`Causal variants`<-factor(data$`Causal variants`,c('SV as causal', 'SV:SGV=1:1', 'SV:SGV=1:3', 'SV:SGV=1:6', 'SV:SGV=1:9', 'SGV as causal'))
-data$Components<-factor(data$Components,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
+data$`Causal regions`=factor(data$`Causal regions`,c('Whole regions', 'cCRE regions', 'Complex regions', 'Enriched cCRE regions', 'Enriched complex regions'))
+data$Chromosome=factor(data$Chromosome,c('chr2', 'chr10', 'chr20'))
+data$Model=factor(data$Model,c('Marginal analysis', 'Joint analysis', 'LD1M1', 'LD1M6', 'LD2M3', 'LD3M2', 'LD6M1'))
+data$`Causal variants`=factor(data$`Causal variants`,c('SV as causal', 'SV:SGV=1:1', 'SV:SGV=1:3', 'SV:SGV=1:6', 'SV:SGV=1:9', 'SGV as causal'))
+data$Components=factor(data$Components,c('SGVs (marginal)', 'SVs (marginal)', 'SGVs (joint)', 'SVs (joint)', 'Sum (joint)'))
 
 
 # for main scenario
@@ -668,7 +668,7 @@ z4=ggplot(tmp, aes(x=`Chromosome`, y=`Estimates`/(q2*comm_ratio),
 z4
 
 
-layout <- "
+layout = "
 A
 B
 C
@@ -695,43 +695,43 @@ Four_prop=subset(data,
 
 Four_prop$prop=Four_prop$`Estimates`/(Four_prop$q2*Four_prop$comm_ratio)
 
-Four_prop$Estimates <- NULL
-Four_prop$sv_ratio <- NULL
+Four_prop$Estimates = NULL
+Four_prop$sv_ratio = NULL
 
-Four_prop_wide <- pivot_wider(Four_prop, 
+Four_prop_wide = pivot_wider(Four_prop, 
                               names_from = c(`Causal variants`, Components), 
                               values_from = prop, 
                               names_sep = ":")
 
 
-solve_linear_system <- function(a, b, c, d, z1, z2) {
-  solutions <- vector("list", length(a))    
+solve_linear_system = function(a, b, c, d, z1, z2) {
+  solutions = vector("list", length(a))    
   for (i in seq_along(a)) {
-    coeff_matrix <- matrix(c(a[i], b[i], c[i], d[i]), nrow = 2, byrow = TRUE)
-    const_vector <- c(z1[i], z2[i])
+    coeff_matrix = matrix(c(a[i], b[i], c[i], d[i]), nrow = 2, byrow = TRUE)
+    const_vector = c(z1[i], z2[i])
     
     if(det(coeff_matrix) != 0) {
-      solutions[[i]] <- solve(coeff_matrix, const_vector)
+      solutions[[i]] = solve(coeff_matrix, const_vector)
     } else {
-      solutions[[i]] <- NA 
+      solutions[[i]] = NA 
     }
   }
   
   do.call(rbind, solutions)
 }
 
-solutions <- solve_linear_system(Four_prop_wide$`SV as causal:SVs (joint)`, 
+solutions = solve_linear_system(Four_prop_wide$`SV as causal:SVs (joint)`, 
                                  Four_prop_wide$`SGV as causal:SVs (joint)`, 
                                  Four_prop_wide$`SV as causal:SGVs (joint)`,
                                  Four_prop_wide$`SGV as causal:SGVs (joint)`, 
                                  rep(0.011, times = 243),
                                  rep(0.185, times = 243))
 
-solutions_df <- as.data.frame(solutions)
+solutions_df = as.data.frame(solutions)
 
-names(solutions_df) <- c("SV", "SGV")
+names(solutions_df) = c("SV", "SGV")
 
-solutions_df$Proportion <- solutions_df$SV / (solutions_df$SV + solutions_df$SGV)
+solutions_df$Proportion = solutions_df$SV / (solutions_df$SV + solutions_df$SGV)
 
 
 Four_prop_wide$SV_estimates = solutions_df$SV
@@ -817,7 +817,7 @@ d=ggplot(tmp, aes(x=`Chromosome`, y=`SV_proportion`,
 d
 
 
-layout <- "
+layout = "
 A
 B
 C
@@ -914,7 +914,7 @@ f=ggplot(tmp) +
 f
 
 
-layout <- "
+layout = "
 E
 F
 "
@@ -931,7 +931,7 @@ ggsave('Figure_R_predicted.pdf', p, width = 7, height = 7)
 # LDS and LDF
 
 
-man_theme <- ggthemr('fresh')
+man_theme = ggthemr('fresh')
 
 theme_set(
   man_theme$theme +
@@ -954,7 +954,7 @@ theme_set(
 
 ### lds
 data = read.table('11.LDA/plot/zSumm_lds.tsv.name', sep = '\t', header = T)
-minor_ticks <- c(seq(1, 10, by = 1), seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000))
+minor_ticks = c(seq(1, 10, by = 1), seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000))
 p1=ggplot(data, mapping = aes(x = type, y = ldscore)) +
   labs(x = "",y = "Cumulative LD score") + 
   geom_violin(aes(fill=type),width=1,cex=0.1,adjust = 2)+ 
@@ -972,7 +972,7 @@ ggsave('LD_score.pdf', p, width = 5, height = 4)
 
 #### ldf
 data = read.table('11.LDA/plot/zSumm_ldf.tsv.name', sep = '\t', header = T)
-minor_ticks <- c(seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000))
+minor_ticks = c(seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000))
 p2=ggplot(data, mapping = aes(x = type, y = nSNPs)) +
   labs(x = "",y = "Number of LD friends") + 
   geom_violin(aes(fill=type),width=1,cex=0.1,adjust = 2)+ 
@@ -989,7 +989,7 @@ ggsave('LD_friend.pdf', p, width = 5, height = 4)
 
 #
 
-layout <- "
+layout = "
 AB
 "
 
@@ -1004,7 +1004,7 @@ ggsave('SF_LDA.pdf', p, width = 8, height = 5)
 
 ## SV length. sig vs non-sig
 
-man_theme <- ggthemr('fresh')
+man_theme = ggthemr('fresh')
 
 theme_set(
   man_theme$theme +
@@ -1029,10 +1029,10 @@ colors_sig=c("#bc4749","#457b9d")
 
 data=fread('05.GWAS/summ/bench_s5_2t/zAnnotSV_for_plot/zBench.Merged.EUR.maf0.01.hwe-6.chrAuto.fastGWA.type3.SV.uniq.annotSV.length',sep = '\t')
 
-data$significant<-factor(data$significant,c('sig', 'nonSig'))
+data$significant=factor(data$significant,c('sig', 'nonSig'))
 
 # length
-minor_ticks <- c(seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
+minor_ticks = c(seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
 p=ggplot(data, aes(x=SV_type, y=SV_length, color=significant, fill=significant)) +
   geom_violin(position=position_dodge(1),width=0.5, size=0.2, adjust=1, color= NA)+
   geom_boxplot(position=position_dodge(1), outlier.size = 0.1, outlier.alpha = 0.05, #outlier.shape = NA,
@@ -1054,7 +1054,7 @@ ggsave('SF_bh_sig_sv_length.pdf', p, width = 7, height = 6)
 
 # individual hsq, MAF, BEAT SV vs SGV
 
-man_theme <- ggthemr('fresh')
+man_theme = ggthemr('fresh')
 
 theme_set(
   man_theme$theme +
@@ -1085,7 +1085,7 @@ data=subset(data,data$type=='SGV' | data$type=='SV')
 data_SGV=subset(data,data$type=='SGV')
 data_SV=subset(data,data$type=='SV')
 
-labels <- data.frame(
+labels = data.frame(
   group = c('SGV', 'SV'),
   label0 = c(paste0('median: ',round(median(data_SGV$hsq_rint_resi), 5)), 
              paste0('median: ',round(median(data_SV$hsq_rint_resi), 5))),
@@ -1096,9 +1096,9 @@ labels <- data.frame(
 )
 
 
-#minor_ticks <- c(seq(200, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
+#minor_ticks = c(seq(200, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
 a=ggviolin(data, x = "type", y = "hsq_rint_resi", fill = "type",width = 0.8)+
-  #p <- ggplot(data,aes(significant,SV_length))+ 
+  #p = ggplot(data,aes(significant,SV_length))+ 
   geom_boxplot(width=0.1, cex=0.7, outlier.size = 0.1, outlier.alpha = 0.1, fill = "white")+
   geom_text(data = labels, aes(label = label0, x = group, y = 0.01, vjust = -5, hjust= -0.2), size = 2.5) +
   geom_text(data = labels, aes(label = label1, x = group, y = 0.01, vjust = -3, hjust= -0.2), size = 2.5) +
@@ -1123,7 +1123,7 @@ data=subset(data,data$type=='SGV' | data$type=='SV')
 data_SGV=subset(data,data$type=='SGV')
 data_SV=subset(data,data$type=='SV')
 
-labels <- data.frame(
+labels = data.frame(
   group = c('SGV', 'SV'),
   label0 = c(paste0('median: ',round(median(data_SGV$af), 5)), 
              paste0('median: ',round(median(data_SV$af), 5))),
@@ -1132,9 +1132,9 @@ labels <- data.frame(
 )
 
 
-#minor_ticks <- c(seq(200, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
+#minor_ticks = c(seq(200, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
 b=ggviolin(data, x = "type", y = "af", fill = "type", width = 0.5)+
-  #p <- ggplot(data,aes(significant,SV_length))+ 
+  #p = ggplot(data,aes(significant,SV_length))+ 
   geom_boxplot(width=0.1, cex=0.7, outlier.size = 0.1, outlier.alpha = 0.1, fill = "white")+
   geom_text(data = labels, aes(label = label0, x = group, y = 0.01, vjust = -13, hjust= -0.4), size = 2.5) +
   geom_text(data = labels, aes(label = label1, x = group, y = 0.01, vjust = -11, hjust= -0.4), size = 2.5) +
@@ -1153,7 +1153,7 @@ data=subset(data,data$type=='SGV' | data$type=='SV')
 data_SGV=subset(data,data$type=='SGV')
 data_SV=subset(data,data$type=='SV')
 
-labels <- data.frame(
+labels = data.frame(
   group = c('SGV', 'SV'),
   label0 = c(paste0('median: ',round(median(data_SGV$beta), 5)), 
              paste0('median: ',round(median(data_SV$beta), 5))),
@@ -1164,9 +1164,9 @@ labels <- data.frame(
 )
 
 
-#minor_ticks <- c(seq(200, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
+#minor_ticks = c(seq(200, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
 c=ggviolin(data, x = "type", y = "beta", fill = "type", width = 0.5)+
-  #p <- ggplot(data,aes(significant,SV_length))+ 
+  #p = ggplot(data,aes(significant,SV_length))+ 
   geom_boxplot(width=0.1, cex=0.7, outlier.size = 0.1, outlier.alpha = 0.1, fill = "white")+
   geom_text(data = labels, aes(label = label0, x = group, y = 0.01, vjust = -19, hjust= -0.2), size = 2.5) +
   geom_text(data = labels, aes(label = label1, x = group, y = 0.01, vjust = -17, hjust= -0.2), size = 2.5) +
@@ -1186,7 +1186,7 @@ data=fread('05.GWAS/summ/bench_s5_2t/zBench.cont.clump.af.beta.indi-hsq.shared-p
            col.names = c("af", "beta", "phe", "type", "hsq_rint", "hsq_rint_resi"))
 
 data=subset(data,data$type=='SGV' | data$type=='SV')
-data$type<-factor(data$type,c('SV', 'SGV'))
+data$type=factor(data$type,c('SV', 'SGV'))
 
 d=ggplot(data, aes(x=af, y=beta, fill=type)) +
   geom_point(size=1.3, colour = "black",shape = 21,stroke = 0) +
@@ -1197,7 +1197,7 @@ d=ggplot(data, aes(x=af, y=beta, fill=type)) +
 
 
 
-layout <- "
+layout = "
 AAACCC
 DDDDDD
 "
@@ -1220,7 +1220,7 @@ ggsave('SF_individual_hsq_af_beta.pdf', p, width = 10, height = 8)
 # VNTR pleo and nearest TSS and SS
 
 
-man_theme <- ggthemr('fresh')
+man_theme = ggthemr('fresh')
 
 theme_set(
   man_theme$theme +
@@ -1278,15 +1278,15 @@ colors_sig=c("#bc4749","#457b9d")
 
 data=fread('06.VNTR/summ_s5_2t_bench/for_anno_plot/sig.nonsig.vntr.anno.whole.tsv.ss.tss.rmNoneLine',sep = '\t')
 
-data_long<-melt(
+data_long=melt(
   data,                       #待转换的数据集名称
   id.vars=c("significant", "VNTR_ID", "ALE_N", "CHR", "REF_STR", "REF_END"),  #要保留的主字段
   variable.name="s_type",         #转换后的分类字段名称（维度）
   value.name="value"#转换后的度量值名称
 )
 
-data_long$significant<-factor(data_long$significant,c('sig', 'nonsig'))
-minor_ticks <- c(seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
+data_long$significant=factor(data_long$significant,c('sig', 'nonsig'))
+minor_ticks = c(seq(10, 100, by = 10), seq(100, 1000, by = 100), seq(2000, 10000, by = 1000), seq(20000, 100000, by = 10000))
 b=ggplot(data_long, aes(x=s_type, y=value, color=significant, fill=significant)) +
   geom_violin(position=position_dodge(1),width=0.5, size=0.2, adjust=1, color= NA)+
   geom_boxplot(position=position_dodge(1), outlier.size = 0.1, outlier.alpha = 0.05,
@@ -1302,7 +1302,7 @@ b=ggplot(data_long, aes(x=s_type, y=value, color=significant, fill=significant))
   stat_compare_means(aes(group = significant,label = paste0("p", ..p.format..)))
 
 
-layout <- "
+layout = "
 AB
 "
 
@@ -1315,7 +1315,7 @@ ggsave('SF_bh_VNTR_pleo_TSS_SS.pdf', p, width = 12, height = 5)
 
 ### COMP
 
-man_theme <- ggthemr('pale')
+man_theme = ggthemr('pale')
 
 ## compare counts
 data = read.table('16.COMPARE/plot/2t/summ_stat_long.txt', sep='\t', header = T)
@@ -1342,7 +1342,7 @@ a
 colors3=c("#a47148","#f0c05a","#6c757d","#e2583e","#61a5c2")
 data = read.table('16.COMPARE/plot/summ_stat_shared_closest_p.txt', sep = '\t', header = T)
 
-minor_ticks <- c(seq(10, 100, by = 10), seq(200, 330, by = 100))
+minor_ticks = c(seq(10, 100, by = 10), seq(200, 330, by = 100))
 b=ggplot(data, aes(x=-log10(p_own), y=-log10(p_uoi))) +
   geom_abline() +
   geom_pointdensity(size = 0.5,adjust = 1) +
@@ -1374,15 +1374,15 @@ b
 
 x=-log10(data$p_own)
 y=-log10(data$p_uoi)
-x[is.infinite(x)] <- 0
-y[is.infinite(y)] <- 0
-correlation <- cor(x, y)
+x[is.infinite(x)] = 0
+y[is.infinite(y)] = 0
+correlation = cor(x, y)
 
 
 ## compare beta
 data = read.table('16.COMPARE/plot/summ_stat_shared.txt', sep = '\t', header = T)
-data$beta_uoi[data$Freq_uoi > 0.5] <- -data$beta_uoi[data$Freq_uoi > 0.5]
-data$Freq_uoi[data$Freq_uoi > 0.5] <- 1-data$Freq_uoi[data$Freq_uoi > 0.5]
+data$beta_uoi[data$Freq_uoi > 0.5] = -data$beta_uoi[data$Freq_uoi > 0.5]
+data$Freq_uoi[data$Freq_uoi > 0.5] = 1-data$Freq_uoi[data$Freq_uoi > 0.5]
 data$fd=abs(data$Freq_own-data$Freq_uoi)
 
 
@@ -1427,7 +1427,7 @@ d=ggplot(data, aes(x = regions,fill=regions)) +
 d
 
 
-layout <- "
+layout = "
 AAAAAA
 BBBDDD
 "
@@ -1464,7 +1464,7 @@ a
 colors3=c("#a47148","#f0c05a","#6c757d","#e2583e","#61a5c2")
 data = read.table('16.COMPARE/plot/summ_stat_VNTR_shared_P.txt', sep = '\t', header = T)
 
-minor_ticks <- c(seq(10, 100, by = 10), seq(200, 330, by = 100))
+minor_ticks = c(seq(10, 100, by = 10), seq(200, 330, by = 100))
 b=ggplot(data, aes(x=-log10(p_own), y=-log10(p_poru))) +
   geom_abline() +
   geom_pointdensity(size = 0.5,adjust = 1) +
@@ -1492,7 +1492,7 @@ b=ggplot(data, aes(x=-log10(p_own), y=-log10(p_poru))) +
 #theme(legend.position = 'none')
 
 
-layout <- "
+layout = "
 AAAAAA
 BBBB##
 "

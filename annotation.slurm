@@ -1,10 +1,7 @@
 #!/bin/bash
 
 
-GP=HGSVC2_HPRCY1
-
-ANNOT_D=ANNOTATE
-SV_vcf_D=${GP}/dotZero
+GP=HGSVC2_HPRCY1; ANNOT_D=ANNOTATE; SV_vcf_D=${GP}/dotZero
 
 
 for c in $(seq 1 22);do
@@ -13,7 +10,7 @@ truvari anno svinfo -i ${SV_vcf_D}/${GP}.chr${c}.stage2.SV.s5.cr50.zero.sort.vcf
 
 # annotSV
 ${ANNOTSV}/bin/AnnotSV \
--SVminSize 0 \
+-SVminSize 50 \
 -SVinputFile ${ANNOT_D}/${GP}/SV_base_sets/${GP}.chr${c}.stage2.SV.s5.cr50.addTYPE.addLEN.vcf \
 -outputFile ${ANNOT_D}/${GP}/SV_base_AnnotSV/${GP}.chr${c}.stage2.SV.s5.cr50.AnnotSV.tsv
 

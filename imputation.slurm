@@ -1,21 +1,20 @@
 #!/bin/bash
 
 
-c=${SLURM_ARRAY_TASK_ID}
-ori_D=raw/GRCh38
+c=${SLURM_ARRAY_TASK_ID}; ori_D=raw/GRCh38
 
 plink2 \
---pfile ${ori_D}/ukb22828_c${c}_b0_v3_exFailed_b38 \
---maf 0.0001 \
---geno 0.01 \
---rm-dup exclude-all \
---snps-only \
---hwe 1e-6 \
---memory 80000 \
---threads 12 \
---output-chr chr26 \
---make-pgen \
---out ukb22828_c${c}_b0_v3_exFailed_b38.POP5.maf1e-4.geno01.hwe1e-6
+	--pfile ${ori_D}/ukb22828_c${c}_b0_v3_exFailed_b38 \
+	--maf 0.0001 \
+	--geno 0.01 \
+	--rm-dup exclude-all \
+	--snps-only \
+	--hwe 1e-6 \
+	--memory 80000 \
+	--threads 12 \
+	--output-chr chr26 \
+	--make-pgen \
+	--out ukb22828_c${c}_b0_v3_exFailed_b38.POP5.maf1e-4.geno01.hwe1e-6
 
 
 for pop in EUR AFR AMR EAS SAS;do
@@ -23,38 +22,38 @@ out_D=${pop}
 mkdir -p ${out_D}
 
 plink2 \
---pfile ukb22828_c${c}_b0_v3_exFailed_b38.POP5.maf1e-4.geno01.hwe1e-6 \
---keep ${pop}.id \
---geno 0.01 \
---mac 3 \
---rm-dup exclude-all \
---snps-only \
---hwe 1e-6 \
---memory 80000 \
---threads 12 \
---output-chr chr26 \
---make-pgen \
---out ${out_D}/ukb22828_c${c}_b0_v3_exFailed_b38.${pop}.maf1e-4.geno01.hwe1e-6
+	--pfile ukb22828_c${c}_b0_v3_exFailed_b38.POP5.maf1e-4.geno01.hwe1e-6 \
+	--keep ${pop}.id \
+	--geno 0.01 \
+	--mac 3 \
+	--rm-dup exclude-all \
+	--snps-only \
+	--hwe 1e-6 \
+	--memory 80000 \
+	--threads 12 \
+	--output-chr chr26 \
+	--make-pgen \
+	--out ${out_D}/ukb22828_c${c}_b0_v3_exFailed_b38.${pop}.maf1e-4.geno01.hwe1e-6
 
 done
 
 for pop in EUR AFR AMR EAS SAS;do
-cd ${pop}
-mkdir -p ${pop}/zScatter/rsid_chunks
-for c in $(seq 1 22);do
-AL=$(wc -l ukb22828_c${c}_b0_v3_exFailed_b38.${pop}.maf1e-4.geno01.hwe1e-6.pvar|awk '{print $1}')
-srt=1
-nxt=15000
-ct=1
-while [ $nxt -le $AL ]; do
-sed -n "${srt},${nxt}p" ukb22828_c${c}_b0_v3_exFailed_b38.${pop}.maf1e-4.geno01.hwe1e-6.pvar > zScatter/rsid_chunks/${c}.${ct}.rsid
-let srt=(nxt-2500)
-let nxt=(srt+15000)
-let ct=(ct+1)
-done
-done
-cd zScatter/rsid_chunks
-ls *rsid > zFileName.txt
+	cd ${pop}
+	mkdir -p ${pop}/zScatter/rsid_chunks
+		for c in $(seq 1 22);do
+		AL=$(wc -l ukb22828_c${c}_b0_v3_exFailed_b38.${pop}.maf1e-4.geno01.hwe1e-6.pvar|awk '{print $1}')
+		srt=1
+		nxt=15000
+		ct=1
+			while [ $nxt -le $AL ]; do
+				sed -n "${srt},${nxt}p" ukb22828_c${c}_b0_v3_exFailed_b38.${pop}.maf1e-4.geno01.hwe1e-6.pvar > zScatter/rsid_chunks/${c}.${ct}.rsid
+				let srt=(nxt-2500)
+				let nxt=(srt+15000)
+				let ct=(ct+1)
+			done
+		done
+	cd zScatter/rsid_chunks
+	ls *rsid > zFileName.txt
 done
 
 
@@ -67,25 +66,25 @@ vck=$(cat ${out_D}/zScatter/rsid_chunks/zFileName.txt|sed -n "${sn}p"|awk -F'.' 
 mkdir -p ${out_D}/zScatter/geno_unphase
 
 plink2 \
---pfile ${out_D}/ukb22828_c${c}_b0_v3_exFailed_b38.EUR.maf1e-4.geno01.hwe1e-6 \
---extract ${out_D}/zScatter/rsid_chunks/${c}.${vck}.rsid \
---memory 50000 \
---threads ${tr} \
---output-chr chr26 \
---export vcf \
---out ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck} \
-&& bgzip ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf \
-&& tabix -p vcf ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf.gz
+	--pfile ${out_D}/ukb22828_c${c}_b0_v3_exFailed_b38.EUR.maf1e-4.geno01.hwe1e-6 \
+	--extract ${out_D}/zScatter/rsid_chunks/${c}.${vck}.rsid \
+	--memory 50000 \
+	--threads ${tr} \
+	--output-chr chr26 \
+	--export vcf \
+	--out ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck} \
+	&& bgzip ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf \
+	&& tabix -p vcf ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf.gz
 
 mkdir -p ${out_D}/zScatter/geno_phase
 
 shapeit4.2 \
---input ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf.gz \
---map human_genetic_map/chr${c}.b38.gmap.gz \
---region chr${c} \
---thread ${tr} \
---pbwt-modulo 0.005 \
---output ${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.vcf.gz
+	--input ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf.gz \
+	--map human_genetic_map/chr${c}.b38.gmap.gz \
+	--region chr${c} \
+	--thread ${tr} \
+	--pbwt-modulo 0.005 \
+	--output ${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.vcf.gz
 
 bcftools sort \
 	-Oz \
@@ -93,7 +92,7 @@ bcftools sort \
 	--output ${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.sort.vcf.gz \
 	${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.vcf.gz && \
 tabix -p vcf ${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.sort.vcf.gz && \
-rm ${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.vcf.gz ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf.gz*
+rm -rf ${out_D}/zScatter/geno_phase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.shapeit4.vcf.gz ${out_D}/zScatter/geno_unphase/UKB.IMPUv3.EUR.chr${c}.QC.vck${vck}.vcf.gz*
 
 
 
@@ -108,8 +107,8 @@ mkdir -p ${bd}/zFilePath
 vck_n=$(cat ${pop}/zScatter/rsid_chunks/zFileName.txt|grep -w ^${c}|wc -l)
 
 for vck in $(seq 1 ${vck_n});do
-echo -e "${pop}/zScatter/geno_phase/UKB.IMPUv3.${pop}.chr${c}.QC.vck${vck}.shapeit4.sort.vcf.gz" >>\
-${bd}/zFilePath/chr${c}.vcks.filepath
+	echo -e "${pop}/zScatter/geno_phase/UKB.IMPUv3.${pop}.chr${c}.QC.vck${vck}.shapeit4.sort.vcf.gz" >>\
+	${bd}/zFilePath/chr${c}.vcks.filepath
 done
 
 bcftools concat \
@@ -256,22 +255,22 @@ IMPU_D=IMPUTATION; GENO_D=GENOTYPE
 for pop in EUR AFR AMR EAS SAS; do
 
 inDir=/storage/yangjianLab/sharedata/uk_biobank/geno_imp_GRCh38
-outDir=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_final/GENOTYPE
+outDir=GENOTYPE
 
 plink2 \
---pfile ${inDir}/ukb22828_c${c}_b0_v3_exFailed_b38 \
---keep /storage/yangjianLab/sharedata/uk_biobank/UKB_Ancestry/${pop}.id \
---make-bed \
---memory 90000 \
---hwe 1e-6 \
---maf 0.01 \
---threads 2 \
---out ${outDir}/UOI_hg38/${pop}/UOI.${pop}.maf0.01.hwe-6.chr${c}
+	--pfile ${inDir}/ukb22828_c${c}_b0_v3_exFailed_b38 \
+	--keep /storage/yangjianLab/sharedata/uk_biobank/UKB_Ancestry/${pop}.id \
+	--make-bed \
+	--memory 90000 \
+	--hwe 1e-6 \
+	--maf 0.01 \
+	--threads 2 \
+	--out ${outDir}/UOI_hg38/${pop}/UOI.${pop}.maf0.01.hwe-6.chr${c}
 
 # rename UOI rsid to avoid dup id
 mv ${outDir}/UOI_hg38/${pop}/UOI.${pop}.maf0.01.hwe-6.chr${c}.bim ${outDir}/UOI_hg38/${pop}/zORI_BIM/UOI.${pop}.maf0.01.hwe-6.chr${c}.bim
 
-python /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_final/DEAL_GENOPHENO/prepare_genos/rename_UOI_bim.py \
+python rename_UOI_bim.py \
 ${outDir}/UOI_hg38/${pop}/zORI_BIM/UOI.${pop}.maf0.01.hwe-6.chr${c}.bim \
 ${outDir}/UOI_hg38/${pop}/UOI.${pop}.maf0.01.hwe-6.chr${c}.bim \
 ${c}
@@ -281,21 +280,19 @@ ${c}
 mkdir -p ${GENO_D}/${GP}/${pop}
 
 plink2 \
---vcf ${IMPU_D}/${GP}/${pop}/zSV/${GP}.${M}.${pop}.chr${c}.impu.dose.SV.reN.sort.vcf.gz \
---memory 90000 \
---hwe 1e-6 \
---mac 1 \
---make-bed \
---threads 2 \
---out ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6
+	--vcf ${IMPU_D}/${GP}/${pop}/zSV/${GP}.${M}.${pop}.chr${c}.impu.dose.SV.reN.sort.vcf.gz \
+	--memory 90000 \
+	--hwe 1e-6 \
+	--mac 1 \
+	--make-bed \
+	--threads 2 \
+	--out ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6
 
 # rename OWN rsid to avoid dup id
-python /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/02.GENOTYPE/1_prepare_geno_SGV_SV/1_prepare_geno_SGV_SV.py \
+python 1_prepare_geno_SGV_SV.py \
 ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6.bim \
-/storage/yangjianLab/baiweiyang/SV_Imputation_Project_panel/Joint_HPRC_ccs47_HGSVC2_ccs9clr21_CKCG_ccs55_132/panels/${GP}/SV_ID/${M}/${GP}.chr${c}.${M}.SV.chr_pos_svid_type_ref_alt.tsv \
+${GP}/SV_ID/${M}/${GP}.chr${c}.${M}.SV.chr_pos_svid_type_ref_alt.tsv \
 ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6.bim_new
-
-mv ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6.bim_new ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6.bim
 
 
 # deal sample ID from SID_SID to SID\tSID
@@ -305,24 +302,24 @@ sed -i 's/_/\t/g' ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6
 
 # get maf 0.01 sv for merge
 plink2 \
---bfile ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6 \
---memory 90000 \
---maf 0.01 \
---make-bed \
---threads 2 \
---out ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.maf0.01.hwe-6
+	--bfile ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.mac1.hwe-6 \
+	--memory 90000 \
+	--maf 0.01 \
+	--make-bed \
+	--threads 2 \
+	--out ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.maf0.01.hwe-6
 
 
 # merge uoi and 0.01 sv
 mkdir -p ${GENO_D}/${GP}_HRC_v3_hg38_merged/${pop}
 
 plink \
---bfile ${GENO_D}/HRC_v3_hg38/${pop}/UOI.${pop}.maf0.01.hwe-6.chr${c} \
---bmerge ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.maf0.01.hwe-6 \
---make-bed \
---memory 90000 \
---threads 2 \
---out ${GENO_D}/${GP}_HRC_v3_hg38_merged/${pop}/Merged.${pop}.chr${c}.maf0.01.hwe-6
+	--bfile ${GENO_D}/HRC_v3_hg38/${pop}/UOI.${pop}.maf0.01.hwe-6.chr${c} \
+	--bmerge ${GENO_D}/${GP}/${pop}/${GP}.${M}.${pop}.chr${c}.SV.maf0.01.hwe-6 \
+	--make-bed \
+	--memory 90000 \
+	--threads 2 \
+	--out ${GENO_D}/${GP}_HRC_v3_hg38_merged/${pop}/Merged.${pop}.chr${c}.maf0.01.hwe-6
 done
 
 
@@ -331,12 +328,12 @@ pop=EUR
 mkdir -p ${GENO_D}/LD_ref/${pop}
 
 plink2 \
---bfile ${GENO_D}/${GP}_HRC_v3_hg38_merged/EUR/Merged.${pop}.chr${c}.maf0.01.hwe-6 \
---keep ${GENO_D}/infos/unRel_0.05_UKB_GRM_HM3_QC_R2_09_MAF01_EUR.rd50K.grm.id \
---make-bed \
---memory 90000 \
---threads 2 \
---out ${GENO_D}/LD_ref/${pop}/Merged.${pop}.chr${c}.maf0.01.hwe-6
+	--bfile ${GENO_D}/${GP}_HRC_v3_hg38_merged/EUR/Merged.${pop}.chr${c}.maf0.01.hwe-6 \
+	--keep ${GENO_D}/infos/unRel_0.05_UKB_GRM_HM3_QC_R2_09_MAF01_EUR.rd50K.grm.id \
+	--make-bed \
+	--memory 90000 \
+	--threads 2 \
+	--out ${GENO_D}/LD_ref/${pop}/Merged.${pop}.chr${c}.maf0.01.hwe-6
 
 
 
@@ -347,13 +344,13 @@ rm -rf ${GRM_D}/GRM_POP4/zSV_SGV/zFILEPATH/${pop}.mgrm.2P.path
 for vt in SV SGV; do
 
 gcta64 \
---mbfile ${geno_D}/infos/zFILEPATH/Merged.${pop}.maf0.01.hwe-6.chrAuto.bfile \
---keep ${geno_D}/infos/zUnRel_ID/UnRel.0.05.Merged.${pop}.maf0.01.hwe-6.chrAuto.grm.id \
---extract ${geno_D}/infos/zVAR_ID/Merged.${pop}.chrAuto.maf0.01.hwe-6.${vt}.vid \
---maf 0.01 \
---make-grm \
---thread-num 2 \
---out ${GRM_D}/GRM_POP4/zSV_SGV/${vt}.unRel0.05.${pop}.maf0.01.hwe-6.chrAuto
+	--mbfile ${geno_D}/infos/zFILEPATH/Merged.${pop}.maf0.01.hwe-6.chrAuto.bfile \
+	--keep ${geno_D}/infos/zUnRel_ID/UnRel.0.05.Merged.${pop}.maf0.01.hwe-6.chrAuto.grm.id \
+	--extract ${geno_D}/infos/zVAR_ID/Merged.${pop}.chrAuto.maf0.01.hwe-6.${vt}.vid \
+	--maf 0.01 \
+	--make-grm \
+	--thread-num 2 \
+	--out ${GRM_D}/GRM_POP4/zSV_SGV/${vt}.unRel0.05.${pop}.maf0.01.hwe-6.chrAuto
 
 echo -e "${GRM_D}/GRM_POP4/zSV_SGV/${vt}.unRel0.05.${pop}.maf0.01.hwe-6.chrAuto" >> ${GRM_D}/GRM_POP4/zSV_SGV/zFILEPATH/${pop}.mgrm.2P.path
 
@@ -361,12 +358,12 @@ done
 
 for vt in SV SV_sole; do
 gcta64 \
---mbfile ${geno_D}/infos/zFILEPATH/Merged.${pop}.maf0.01.hwe-6.chrAuto.bfile \
---keep ${GRM_D}/GRM_${pop}/GRM_chunks/zSample/${pop}_sck${sk} \
---extract ${geno_D}/infos/zVAR_ID/Merged.${pop}.chrAuto.maf0.01.hwe-6.${vt}.vid \
---maf 0.01 \
---make-grm \
---thread-num 12 \
---out ${GRM_D}/GRM_${pop}/GRM_chunks/${pop}.maf0.01.hwe-6.chrAuto.${vt}.sck${sk}
+	--mbfile ${geno_D}/infos/zFILEPATH/Merged.${pop}.maf0.01.hwe-6.chrAuto.bfile \
+	--keep ${GRM_D}/GRM_${pop}/GRM_chunks/zSample/${pop}_sck${sk} \
+	--extract ${geno_D}/infos/zVAR_ID/Merged.${pop}.chrAuto.maf0.01.hwe-6.${vt}.vid \
+	--maf 0.01 \
+	--make-grm \
+	--thread-num 12 \
+	--out ${GRM_D}/GRM_${pop}/GRM_chunks/${pop}.maf0.01.hwe-6.chrAuto.${vt}.sck${sk}
 done
 

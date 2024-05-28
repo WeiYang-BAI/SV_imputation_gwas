@@ -38,7 +38,6 @@ if [ $inOKG == 'yes' ]; then
 	# check phasing with whatshap
 	hash -r
 	source ~/.bashrc
-	source /home/yangjianLab/baiweiyang/tools/Miniconda3/bin/activate
 	conda deactivate
 	conda activate whatshap
 
@@ -95,14 +94,13 @@ if [ $inOKG == 'yes' ]; then
 	# check stage2 vs okg, mismatch
 	hash -r
 	source ~/.bashrc
-	source /home/yangjianLab/baiweiyang/tools/Miniconda3/bin/activate
 	conda deactivate
 	conda activate pyvcf
 
 	zcat ${isec_D}/sorted.0002.vcf.gz|grep -v '^#'|awk '{print $10}'|awk -F':' '{print $1}' > ${isec_D}/stage2_0002_haps.txt
 	zcat ${isec_D}/sorted.0003.vcf.gz|grep -v '^#'|awk '{print $10}'|awk -F':' '{print $1}' > ${isec_D}/okg_0003_haps.txt
 
-	python3 /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_final/CONCAT/keep_phase_make_fianl/check_err.py \
+	python3 check_err.py \
 	${isec_D}/stage2_0002_haps.txt \
 	${isec_D}/okg_0003_haps.txt \
 	${isec_D}/stage2_okg_haps_diff_stat.txt \
@@ -271,7 +269,6 @@ for GP in PUB56 CN62 PUB1KCP111;do
 
 	hash -r
 	source ~/.bashrc
-	source /home/yangjianLab/baiweiyang/tools/Miniconda3/bin/activate
 	conda deactivate
 	conda activate svanalyzer
 
@@ -288,16 +285,15 @@ for GP in PUB56 CN62 PUB1KCP111;do
 
 		# get clustered SV id
 		cat ${merge_prefix}.clustered.vcf | grep -v '^#'|awk '{print $8}'|awk -F'ClusterIDs=' '{print $2}'|awk -F';' '{print $1}' > ${asGT_prefix}.ClusterID
-		# get header and body's info
 		cat ${merge_prefix}.clustered.vcf | grep '^#' > ${asGT_prefix}.header
-		cat ${merge_prefix}.clustered.vcf | grep -v '^#'|awk -v OFS='\t' '{print $1,$2,$3,$4,$5}' | tr a-z A-Z | sed 's/CHR/chr/g' > ${asGT_prefix}.siteInfo1
+		cat ${merge_prefix}.clustered.vcf | grep -v '^#'|awk -v OFS='\t' '{print $1,$2,$3,$4,$5}' > ${asGT_prefix}.siteInfo1
 		cat ${merge_prefix}.clustered.vcf | grep -v '^#'|awk -v OFS='\t' '{print $6,$7,$8}' > ${asGT_prefix}.siteInfo2
 
 		# get raw body for asign GT
 		zcat ${group_prefix}.vcf.gz | grep ^c > ${group_prefix}.vcf.body
 
 		for entry in $(cat ${asGT_prefix}.ClusterID);do
-			python /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_final/HPRC/merge_SV_across_samples/asign_gt/GRSB_asign_47_sample_gt.py \
+			python GRSB_asign_47_sample_gt.py \
 			${entry} \
 			${group_prefix}.vcf.body \
 			${asGT_prefix}.gt
@@ -461,12 +457,8 @@ done
 
 # These two parts (above and below) can be merged into one for-do-done.
 for GP in HGSVC2_HPRCY1 ;do
-
-	# make m3vcf
 	mkdir -p ${base_D}/panels/${GP}/m3vcf/M23s5F
-
 	M23s5F_m3=${base_D}/panels/${GP}/m3vcf/M23s5F/${GP}.chr${c}.M23s5F
-
 	Minimac3-omp --refHaps ${M23s5F} --processReference --chr chr${c} --cpus ${tr} --prefix ${M23s5F_m3}
 done
 

@@ -1,20 +1,15 @@
 #!/bin/bash
 
-tr=2
-sn=${SLURM_ARRAY_TASK_ID}
+tr=2; sn=${SLURM_ARRAY_TASK_ID}
 
-
+# specify trait type
 if [ $sn -gt 2088 ]; then cob=C; else cob=B; fi
-
-T2740_filePath_F=PHENOTYPE/infos/both.final.2740.filePath
-
-phe=$(cat ${T2740_filePath_F} | sed -n "${sn}p" | awk -F'/' '{print $8}' | awk -F'.pheno' '{print $1}')
-
+filePath_F=/storage/yangjianLab/baiweiyang/SV_Imputation_Project_final/PHENOTYPE/infos/both.final.filePath
+phe=$(cat ${filePath_F} | sed -n "${sn}p" | awk -F'/' '{print $8}' | awk -F'.pheno' '{print $1}')
 
 FINEMAP_D=FINEMAP/bench # this is for bench dir
 GWAS_D=GWAS
 GENO_D=GENOTYPE
-
 
 for pop in EUR ; do
 
@@ -64,8 +59,7 @@ for pop in EUR ; do
             echo -e "rsid chromosome position allele1 allele2 maf beta se" > ${FINEMAP_D}/FM/${pop}/${phe}/z_file/${phe}.${vid}.${chm}-${srt}-${end}.z
             cat ${FINEMAP_D}/FM/${pop}/${phe}/${phe}.all.z | sed '1d' | awk '{if($2=='"$chm"') print $0}' |\
             awk '{if($3>'"$srt"' && $3<'"$end"') print $0}' >> ${FINEMAP_D}/FM/${pop}/${phe}/z_file/${phe}.${vid}.${chm}-${srt}-${end}.z
-            cat ${FINEMAP_D}/FM/${pop}/${phe}/z_file/${phe}.${vid}.${chm}-${srt}-${end}.z | sed '1d' | awk '{print $1}' > \
-            ${FINEMAP_D}/FM/${pop}/${phe}/z_file/${phe}.${vid}.${chm}-${srt}-${end}.rsid
+            cat ${FINEMAP_D}/FM/${pop}/${phe}/z_file/${phe}.${vid}.${chm}-${srt}-${end}.z | sed '1d' | awk '{print $1}' > ${FINEMAP_D}/FM/${pop}/${phe}/z_file/${phe}.${vid}.${chm}-${srt}-${end}.rsid
 
             # prepare geno and LD files
             plink2 \
@@ -104,13 +98,12 @@ for pop in EUR ; do
             echo "${zFile};${ldFile};${snpFile};${configFile};${credFile};${logFile};${n_samples}" >> ${FINEMAP_D}/FM/${pop}/${phe}/${phe}.cojo.master
         done
 
-
         # Run finemap
-        /home/yangjianLab/baiweiyang/tools/finemap_v1.4.1_x86_64/finemap_v1.4.1_x86_64 \
+        finemap_v1.4.1_x86_64 \
         --sss \
         --in-files ${FINEMAP_D}/FM/${pop}/${phe}/${phe}.cojo.master \
         --n-causal-snps 10 \
-        --n-threads 2 \
+        --n-threads ${tr} \
         --log
 
     fi

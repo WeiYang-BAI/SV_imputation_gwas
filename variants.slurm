@@ -103,9 +103,9 @@ zcat ${outD}/${SID}_unimap_match-two.${deal}.${vt}.sort.pre.vcf.gz |grep -v '^#'
 zcat ${outD}/${SID}_unimap_match-two.${deal}.${vt}.sort.pre.vcf.gz |grep '^#' > ${outD}/${SID}_unimap_match-two.${deal}.${vt}.header
 
 sed -i '$d' ${outD}/${SID}_unimap_match-two.${deal}.${vt}.header
-echo "#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	${SID}" >> ${outD}/${SID}_unimap_match-two.${deal}.${vt}.header
+echo -e "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t${SID}" >> ${outD}/${SID}_unimap_match-two.${deal}.${vt}.header
 
-python3 /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_panel/match_SNP-InDel_58/Match-SGV.py \
+python3 Match-SGV.py \
 ${outD}/${SID}_unimap_match-two.${deal}.${vt}.noheader.vcf \
 ${outD}/${SID}_unimap_match-two.${deal}.${vt}.noheader.pre1.vcf
 
@@ -123,32 +123,11 @@ tabix -p vcf ${outD}/${SID}_unimap_match-two.${deal}.${vt}.sort.vcf.gz
 done
 
 
-outD=integ/SV/${SID}
 ref_F=hg38.no_alt.fa
-
-for ff in addID.exCEN.inConFi ;do
-for cls in pav-dip pav-svim;do
-caller1=$(echo ${cls}|awk -F'-' '{print $1}')
-caller2=$(echo ${cls}|awk -F'-' '{print $2}')
-
-SV_1=${caller1}/qc/${SID}/zSV/${SID}.${caller1}.bi.norm.exSND.chrAuto.${ff}.SV.sort.vcf.gz
-SV_2=${caller2}/qc/${SID}/zSV/${SID}.${caller2}.bi.norm.exSND.chrAuto.${ff}.SV.sort.vcf.gz
-
-svanalyzer benchmark --ref ${ref_F} --test ${SV_1} --truth ${SV_2} --prefix ${outD}/${caller1}-${caller2}-unimap-SV-${SID}-${ff}
-done
-done
-
-
-
 deal=bi.norm.exSND.chrAuto.addID.exCEN.inConFi
-
 ff=addID.exCEN.inConFi
-
-
 outD=${data_set}_variant/integ/SV/${SID}
 
-
-#for cls in dip-svim-pav svim-pav-dip pav-dip-svim;do   # only pav data was produced
 for cls in pav-dip-svim;do
 cl_1=$(echo ${cls}|awk -F'-' '{print $1}')
 cl_2=$(echo ${cls}|awk -F'-' '{print $2}')

@@ -110,7 +110,7 @@ for c in $(seq 1 22);do
 					regression_D=${VNTR_D}/regression_unRel05/${pop}/${mtp}_maf01_${gtp}_geno_rsq00/${phe}
 					mkdir -p ${regression_D}
 
-					Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/06.VNTR/2_regression_unRel05/2_regression_unRel.R \
+					Rscript --slave --no-save 2_regression_unRel.R \
 					${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.vntr_id \
 					${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.T \
 					${phenoDir}/Main_74/${phe}.pheno \
@@ -124,7 +124,7 @@ for c in $(seq 1 22);do
 					regression_D=${VNTR_D}/regression_unRel05/${pop}/${mtp}_maf01_${gtp}_geno_rsq00/${phe}
 					mkdir -p ${regression_D}
 
-					Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/06.VNTR/2_regression_unRel05/2_regression_unRel.R \
+					Rscript --slave --no-save 2_regression_unRel.R \
 					${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.vntr_id \
 					${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.T \
 					${phenoDir}/Main_74/${phe}.pheno \
@@ -141,7 +141,7 @@ done
 
 for c in $(seq 1 22);do
 	if [ $sn -gt 2088 ]; then
-		Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/06.VNTR/2_regression_unRel05/2_regression_unRel.R \
+		Rscript --slave --no-save 2_regression_unRel.R \
 		${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.vntr_id \
 		${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.T \
 		${phe_F} \
@@ -150,7 +150,7 @@ for c in $(seq 1 22);do
 		${GENO_D}/infos/zUnRel_ID/UnRel.0.05.Merged.${pop}.maf0.01.hwe-6.chrAuto.grm.id \
 		conti
 	else
-		Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/06.VNTR/2_regression_unRel05/2_regression_unRel.R \
+		Rscript --slave --no-save 2_regression_unRel.R \
 		${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.vntr_id \
 		${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.T \
 		${phe_F} \
@@ -174,7 +174,7 @@ for vt in SGV SV;do
 
 if [ -s "${xmat_D}/chrAuto.${vt}.cojo-slct.012.xmat.F" ]; then
 
-	python3 /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/06.VNTR/4_generate_condi_cojo_residual/4_generate_pheno_geno.py \
+	python3 4_generate_pheno_geno.py \
 	${phe_F} \
 	${xmat_D}/chrAuto.${vt}.cojo-slct.012.xmat.F \
 	${residual_dir}/${phe}.${pop}.cojo-slct.chrAuto.${vt}.xmat.pheno
@@ -191,7 +191,7 @@ if [ -s "${xmat_D}/chrAuto.${vt}.cojo-slct.012.xmat.F" ]; then
 	mlrModel=$(cat ${residual_dir}/${phe}.${pop}.cojo-slct.chrAuto.${vt}.xmat.pheno | head -n 1 | sed 's/IID pheno /pheno~/' | sed 's/ /+/g')
 
 	# run R-mlr
-	Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_s5_2t/06.VNTR/4_generate_T74_condi_cojo_residual/4_generate_cojo-var_residual.R \
+	Rscript --slave --no-save 4_generate_cojo-var_residual.R \
 	${residual_dir}/${phe}.${pop}.cojo-slct.chrAuto.${vt}.xmat.pheno \
 	${residual_dir}/${phe}.${pop}.cojo-slct.chrAuto.${vt}.xmat.pheno.mlr.residual.raw \
 	${mlrModel} \
@@ -222,7 +222,7 @@ boc=conti
 if [ -s "${residual_dir}/${phe}.${pop}.cojo-slct.chrAuto.SGV.xmat.pheno.mlr.residual" ]; then
 
 for c in $(seq 1 22);do
-	Rscript --slave --no-save /home/yangjianLab/baiweiyang/scripts/SV_Imputation_project_analysis/06.VNTR/2_regression_unRel05/2_regression_unRel.R \
+	Rscript --slave --no-save 2_regression_unRel.R \
 	${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.vntr_id \
 	${VNTR_D}/prepare_GENO/${pop}/chr${c}/ale_gt/z.${pop}.chr${c}.N2.${mtp}-maf01.vid-gt-cn-${gtp}.T \
 	${residual_dir}/${phe}.${pop}.cojo-slct.chrAuto.SGV.xmat.pheno.mlr.residual \
