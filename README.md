@@ -1,5 +1,7 @@
-# SV imputation and GWAS
+# Scripts for SV Imputation and SV-GWAS
 
-This repository houses the scripts used for data analysis, as well as for the creation of figures and tables, in the study of structural variation (SV) imputation and genome-wide association studies (GWAS). <br><br>
-We have developed a web-based imputation tool that enables users to impute SVs and Variable Numbers of Tandem Repeats (VNTRs) in human samples using SNP genotype data acquired from SNP arrays, SNP imputation, or whole-genome sequencing. We provided a comprehensive help document that guides users through its functionalities. For further details, please refer to our website at https://yanglab.westlake.edu.cn/impute_sv. <br><br>
-We performed SV and VNTR imputations in the UK Biobank cohort and subsequently conducted a GWAS. The summary data from our study can be accessed through our GWAS portal, available at https://yanglab.westlake.edu.cn/data/ukb_sv_gwas.
+This repository contains scripts used for data analysis and for generating figures and tables in our study on structural variation (SV) imputation, as well as for performing genome-wide association studies (GWAS) using imputed SVs for complex traits.<br><br>
+ 
+We have developed a web-based imputation tool for imputing SVs, including Variable Number Tandem Repeats (VNTRs), in human samples with SNP data. The SNP data can be obtained from SNP arrays, SNP imputation, or whole-genome sequencing. An extensive help document is also provided to assist users with the tool for online SV imputation. For additional information, please visit our SV imputation website at https://yanglab.westlake.edu.cn/impute_sv.<br><br>
+ 
+Genome-wide association analyses have been conducted on the imputed SVs for more than 2,000 traits within the UK Biobank. Summary data from these SV-GWAS are available at https://yanglab.westlake.edu.cn/data/ukb_sv_gwas.
